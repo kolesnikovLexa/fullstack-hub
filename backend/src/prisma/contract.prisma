@@ -1,0 +1,41 @@
+// use prisma-8
+// Contract inferred from the live database schema. Edit as needed, then run `prisma contract emit`.
+
+model Companies {
+  id        Uuid         @id(map: "companies_pkey")
+  name      VarChar(255) @unique(map: "companies_name_unique")
+  employees Employees[]
+
+  @@map("companies")
+}
+
+model Employees {
+  id        Uuid         @id(map: "employees_pkey")
+  name      VarChar(255)
+  email     VarChar(255)
+  phone     VarChar(50)
+  companyId Uuid         @map("company_id")
+  company   Companies    @relation(fields: [companyId], references: [id], map: "employees_company_id_fkey", index: false)
+
+  @@map("employees")
+}
+
+model Users {
+  id       Int          @id(map: "users_pkey") @default(autoincrement())
+  email    VarChar(255)
+  password VarChar(255)
+  tasks    Tasks[]
+
+  @@map("users")
+}
+
+model Tasks {
+  id          Uuid         @id(map: "tasks_pkey")
+  title       VarChar(255)
+  description String
+  status      VarChar(50)
+  userId      Int          @map("user_id")
+  user        Users        @relation(fields: [userId], references: [id], map: "tasks_user_id_fkey", index: false)
+
+  @@map("tasks")
+}
