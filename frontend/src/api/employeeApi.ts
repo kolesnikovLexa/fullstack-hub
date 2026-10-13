@@ -1,4 +1,5 @@
-import type { Employee, EmployeeFormData } from "../types/employee"
+import type { Employee } from "../types/employee"
+import type { EmployeeFormData } from "../schemas/employeeSchema"
 import { apiFetch } from "../utils/apiFetch"
 import { getApiError } from "../utils/getApiError"
 
