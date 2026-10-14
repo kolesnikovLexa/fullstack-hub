@@ -1,10 +1,11 @@
-import { mongoDb } from "../db/mongo"
+import { getMongoDb } from "../db/mongo"
 import { AppError } from "../errors/AppError"
 import type { Settings, SettingsDocument } from "../types/settings"
 
-const settingsCollection = mongoDb.collection<SettingsDocument>("settings")
-
 export async function getSettings(userId: number): Promise<SettingsDocument> {
+  const settingsCollection =
+    getMongoDb().collection<SettingsDocument>("settings")
+
   const settings = await settingsCollection.findOne({ userId })
 
   if (settings) {
@@ -28,6 +29,9 @@ export async function updateSettings(
   userId: number,
   settings: Settings,
 ): Promise<SettingsDocument> {
+  const settingsCollection =
+    getMongoDb().collection<SettingsDocument>("settings")
+
   const updatedSettings = await settingsCollection.findOneAndUpdate(
     { userId },
     {

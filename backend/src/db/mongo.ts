@@ -1,18 +1,28 @@
-import { MongoClient } from "mongodb"
+import { MongoClient, type Db } from "mongodb"
 
-const uri = process.env.MONGODB_URI
+let client: MongoClient | undefined
+let database: Db | undefined
 
-if (!uri) {
-  throw new Error("MONGODB_URI is not defined")
+export function getMongoDb(): Db {
+  if (!database) {
+    const uri = process.env.MONGODB_URI
+
+    if (!uri) {
+      throw new Error("MONGODB_URI is not defined")
+    }
+
+    client = new MongoClient(uri)
+    database = client.db("fullstack_interview")
+  }
+
+  return database
 }
 
-const client = new MongoClient(uri)
-
-export const mongoDb = client.db("fullstack_interview")
-
 export async function connectMongo() {
-  await client.connect()
-  await mongoDb.command({ ping: 1 })
+  const db = getMongoDb()
+
+  await client!.connect()
+  await db.command({ ping: 1 })
 
   console.log("MongoDB connected")
 }
