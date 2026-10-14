@@ -1,6 +1,6 @@
 # Fullstack Hub
 
-A fullstack web application built with React, TypeScript, Node.js, and Express. The project demonstrates frontend and backend development, authentication, database integration, API design, testing, and Docker-based deployment.
+A fullstack web application built with React, TypeScript, Node.js, and Express. The project demonstrates frontend and backend development, authentication, database integration, REST API design, automated testing, and containerization.
 
 ## Features
 
@@ -12,8 +12,9 @@ A fullstack web application built with React, TypeScript, Node.js, and Express. 
 - **Database integration** — PostgreSQL for relational data and MongoDB for application settings.
 - **Data fetching and caching** — TanStack Query.
 - **Form management and validation** — React Hook Form and Zod.
-- **Automated tests** — Vitest tests for backend services and API routes.
-- **Code quality** — ESLint for both frontend and backend.
+- **Automated testing** — Vitest tests for frontend components, backend services, and API routes.
+- **Code quality** — ESLint for frontend and backend.
+- **Continuous integration** — GitHub Actions automatically runs project checks.
 - **Containerization** — Docker Compose for running the application and PostgreSQL.
 
 ## Tech Stack
@@ -27,33 +28,41 @@ A fullstack web application built with React, TypeScript, Node.js, and Express. 
 - TanStack Query
 - React Hook Form
 - Zod
+- Vitest
+- React Testing Library
 
 ### Backend
 
 - Node.js
 - Express
 - TypeScript
-- Prisma ORM
+- Prisma ORM (Prisma 8 release candidate)
 - PostgreSQL
 - MongoDB Atlas
 - JSON Web Tokens (JWT)
+- Zod
+- Vitest
+- Supertest
 
 ### Development Tools
 
 - Docker
 - Docker Compose
 - ESLint
-- Vitest
+- GitHub Actions
 - npm
 
 ## Project Structure
 
 ```text
 fullstack-hub/
-├── frontend/              # React frontend
-├── backend/               # Express backend and API
-├── docker-compose.yml     # Application services
-├── package.json           # Root-level project scripts
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+├── frontend/
+├── backend/
+├── docker-compose.yml
+├── package.json
 ├── package-lock.json
 └── README.md
 ```
@@ -69,20 +78,22 @@ Install the following tools:
 
 Docker Desktop includes Docker Compose.
 
+Node.js and npm are also required if you want to run the project checks locally outside Docker.
+
 ### Installation
 
 Clone the repository:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/kolesnikovLexa/fullstack-hub.git
 cd fullstack-hub
 ```
 
-Create the backend environment file at `backend/.env` and configure all required environment variables.
+Create the backend environment file at `backend/.env` and configure the required environment variables.
 
-The backend uses PostgreSQL through Docker Compose and connects to MongoDB Atlas for application settings. Configure any required MongoDB connection details and authentication secrets in the environment file.
+The backend uses PostgreSQL through Docker Compose and connects to MongoDB Atlas for application settings. Configure the MongoDB connection string and authentication secrets in the environment file.
 
-Do not commit `.env` files or production credentials to the repository.
+Do not commit `.env` files, credentials, or production secrets to the repository.
 
 ### Start the Application
 
@@ -100,9 +111,11 @@ Once the services are running, access the application at:
 
 The PostgreSQL database is named `fullstack_interview`.
 
-Docker Compose creates a persistent volume named `postgres_data` for PostgreSQL data.
+Docker Compose creates a persistent volume named `frontend-dashboard_postgres_data` for PostgreSQL data.
 
 ### View Container Status
+
+Check the status of the containers:
 
 ```bash
 docker compose ps
@@ -142,7 +155,7 @@ docker compose down -v
 
 ## Project Checks
 
-The repository includes a root-level command for running the main code quality and build checks.
+The repository includes a root-level command for running the main code quality, testing, and build checks.
 
 From the project root, run:
 
@@ -150,14 +163,30 @@ From the project root, run:
 npm run check
 ```
 
-This command runs:
+This command runs the following checks in sequence:
 
 1. ESLint for the frontend.
 2. ESLint for the backend.
-3. Backend tests using Vitest.
-4. A production build of the frontend.
+3. Frontend tests using Vitest.
+4. Backend tests using Vitest.
+5. A production build of the frontend.
 
 The command stops if any step fails.
+
+## Continuous Integration
+
+GitHub Actions automatically runs the project checks on pushes to the `main` branch and pull requests targeting `main`.
+
+The CI workflow:
+
+1. Checks out the repository.
+2. Sets up Node.js.
+3. Installs frontend and backend dependencies.
+4. Runs `npm run check`.
+
+This verifies code quality, frontend and backend tests, and the frontend production build in the CI environment.
+
+The workflow configuration is located in `.github/workflows/ci.yml`.
 
 ## Databases
 
@@ -165,20 +194,23 @@ The command stops if any step fails.
 
 PostgreSQL stores relational application data, including employee records and other application entities managed by the backend.
 
-The database runs as a Docker Compose service and persists data in a named Docker volume.
+The project uses PostgreSQL 17 through Docker Compose. The database persists data in a named Docker volume.
+
+When running through Docker Compose, the backend connects to PostgreSQL using the internal Docker service address.
 
 ### MongoDB Atlas
 
 MongoDB Atlas stores application settings.
 
-A MongoDB Atlas account and a correctly configured connection string may be required for settings-related functionality.
+A MongoDB Atlas account and a correctly configured connection string are required for settings-related functionality.
 
 ## Security Notes
 
 - JWT authentication protects restricted API routes.
 - Environment variables are used for sensitive configuration.
 - Do not commit secrets, access tokens, database credentials, or production environment files.
-- The default PostgreSQL credentials in `docker-compose.yml` are intended for local development only. Use secure credentials and appropriate secret management for production deployments.
+- The default PostgreSQL credentials in `docker-compose.yml` are intended for local development only.
+- Use secure credentials and appropriate secret management for production deployments.
 
 ## Purpose
 
@@ -189,5 +221,6 @@ This project was developed as a fullstack learning and portfolio project to prac
 - Authentication and authorization.
 - Relational and document database integration.
 - Form validation and server-state management.
-- Automated testing and linting.
+- Frontend and backend testing.
+- Code quality checks and continuous integration.
 - Docker-based application setup.
