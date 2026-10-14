@@ -8,4 +8,4 @@ export const db = postgres<Contract>({
   url: process.env["DATABASE_URL"]!,
 })
 
-export const prisma = await db.connect()
+export const prisma = db.runtime()
