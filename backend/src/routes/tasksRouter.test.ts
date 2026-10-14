@@ -13,6 +13,8 @@ vi.mock("../services/taskService", () => ({
   deleteTask: vi.fn(),
 }))
 
+process.env.JWT_SECRET ??= "test-secret"
+
 describe("Tasks API", () => {
   const token = jwt.sign({ userId: 1 }, process.env.JWT_SECRET!)
 

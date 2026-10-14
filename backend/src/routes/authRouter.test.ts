@@ -9,14 +9,13 @@ import {
   getCurrentUser,
 } from "../services/authService"
 
-// Тестовый секрет, не предназначенный для production.
-process.env.JWT_SECRET ??= "test-secret"
-
 vi.mock("../services/authService", () => ({
   registerUser: vi.fn(),
   loginUser: vi.fn(),
   getCurrentUser: vi.fn(),
 }))
+
+process.env.JWT_SECRET ??= "test-secret"
 
 describe("Auth API", () => {
   const token = jwt.sign({ userId: 1 }, process.env.JWT_SECRET!)

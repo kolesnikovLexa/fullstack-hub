@@ -13,6 +13,8 @@ vi.mock("../services/employeeService", () => ({
   deleteEmployee: vi.fn(),
 }))
 
+process.env.JWT_SECRET ??= "test-secret"
+
 describe("Employees API", () => {
   const token = jwt.sign({ userId: 1 }, process.env.JWT_SECRET!)
 
