@@ -2,12 +2,15 @@ import request from "supertest"
 import { describe, expect, it, vi } from "vitest"
 import jwt from "jsonwebtoken"
 
-import app from "../index"
+import app from "../app"
 import {
   registerUser,
   loginUser,
   getCurrentUser,
 } from "../services/authService"
+
+// Тестовый секрет, не предназначенный для production.
+process.env.JWT_SECRET ??= "test-secret"
 
 vi.mock("../services/authService", () => ({
   registerUser: vi.fn(),

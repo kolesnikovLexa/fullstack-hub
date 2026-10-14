@@ -2,7 +2,7 @@ import request from "supertest"
 import { describe, expect, it, vi } from "vitest"
 import jwt from "jsonwebtoken"
 
-import app from "../index"
+import app from "../app"
 import { getTasks, createTask, deleteTask } from "../services/taskService"
 
 vi.mock("../services/taskService", () => ({
